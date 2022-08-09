@@ -13,7 +13,7 @@ const PostListItem = ({
 }) =>  {
 
    return (
-    <Pressable onPress={()=> onClickAction(item)} style={styles.postCard}>
+    <Pressable onPress={()=> onClickAction ? onClickAction(item) : null} style={styles.postCard}>
         <View style={styles.postContentA}>
             <View style={styles._row}>
                 <Text style={styles.postNameT} numberOfLines={1} ellipsizeMode={'middle'}>{item.title}</Text>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { POST } from '../../constants/posts';
 import { View, Text, FlatList, RefreshControl, ActivityIndicator, Pressable, Dimensions, Alert } from 'react-native'
 
@@ -17,6 +17,7 @@ import styles from './Style';
 const Posts = ({navigation}) => {
     const dispatch = useDispatch()
     const toast = useToast()
+    const flatListRef = useRef();
     
     const [showLoading, setShowLoading] = useState()
     const [offset, setOffset] = useState(0)
@@ -43,8 +44,9 @@ const Posts = ({navigation}) => {
                 limit,
             }
             getPostsData(payload)
+            flatListRef.current && flatListRef.current.scrollToOffset({ offset: 0, animated: false });
         });
-        return () => activeListener.remove();
+        return activeListener;
       }, []);
 
     
@@ -117,6 +119,7 @@ const Posts = ({navigation}) => {
             <View style={styles.mt15}>
                 {showLoading && <ActivityIndicator style={styles.pageLoading} size="small" color={colors.mainColor}   />}
                 <FlatList
+                    ref={(ref) => (flatListRef.current = ref)}
                     style={{  width: '100%', height: '100%' }}
                     data={posts}
                     refreshControl={<RefreshControl tintColor={colors.mainColor} refreshing={refreshLoading} onRefresh={()=> {refreshData()}} />}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, FlatList, RefreshControl, ActivityIndicator } from 'react-native'
 import FastImage from 'react-native-fast-image';
 import FIcon from "react-native-vector-icons/FontAwesome";
@@ -18,6 +18,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 const Post = ({navigation}) => {
     const dispatch = useDispatch()
     const toast = useToast()
+    const flatListRef = useRef();
     
     const [showLoading, setShowLoading] = useState()
     const [offset, setOffset] = useState(0)
@@ -45,8 +46,9 @@ const Post = ({navigation}) => {
                     postId: post.id
                 }
                 getCommentsData(payload)
+                flatListRef.current && flatListRef.current.scrollToOffset({ offset: 0, animated: false });
             });
-            return () => activeListener.remove();
+            return activeListener;
         }
     }, [post])
     
@@ -118,12 +120,13 @@ const Post = ({navigation}) => {
     return (
         <View  style={styles.body}>
             <Header title={"Post Details"} hasBackButton navigation={navigation} />
-            <ScrollView>
                 <View style={styles.mt15}>
-                    <PostDetails item={post}  />
-                    <Text style = {styles.mainTextA}>Comments </Text>
+                    
+                    
                     {showLoading && <ActivityIndicator style={styles.pageLoading} size="small" color={colors.mainColor}   />}
                     <FlatList
+                        ListHeaderComponent={<PostDetails item={post}  />}
+                        ref={(ref) => (flatListRef.current = ref)}
                         style={{  width: '100%', height: '100%' }}
                         data={comments}
                         refreshControl={<RefreshControl tintColor={colors.mainColor} refreshing={refreshLoading} onRefresh={()=> {refreshData()}} />}
@@ -133,7 +136,7 @@ const Post = ({navigation}) => {
                         <PostListItem item={item}  />
                         )}
                         onEndReached={({distanceFromEnd})=>{
-                            if(distanceFromEnd > 1.5 && !showLoading){
+                            if(distanceFromEnd > 0.5 && !showLoading){
                                 comments.length % limit == 0 && getMoreData(limit, offset)
                             }
                         }}
@@ -145,7 +148,6 @@ const Post = ({navigation}) => {
                 <View style={styles.fab}>
                     <FAB buttonColor={colors.mainColor} iconTextColor={colors.white} onClickAction={() => {showToast(toast, "This is out of the scope of this application.", "error", "top")}} visible={true} iconTextComponent={<FIcon name="plus"/>} />
                 </View>
-            </ScrollView>
         </View>
     );
 }

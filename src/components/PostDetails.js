@@ -32,7 +32,7 @@ const PostDetails = ({
                 <Text style={[styles.postQuantityA]}>{item.user} </Text>
                 <Text style={styles.date}>{moment(item.createdAt).format('MMMM, DD YYYY H:M')}</Text>
             </View>
-            
+            <Text style = {styles.mainTextA}>Comments </Text>
         </View>
     </Pressable>
    )

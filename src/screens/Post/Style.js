@@ -27,6 +27,12 @@ export default styles = StyleSheet.create ({
         alignSelf: 'center',
         flex: 1,
     },
+    mb15: {
+        marginTop: scale(25),
+        width: '90%',
+        alignSelf: 'center',
+        flex: 1,
+    },
     fab: {
         position: 'absolute',
         bottom: scale(80),

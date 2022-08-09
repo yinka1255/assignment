@@ -457,5 +457,12 @@ export default styles = StyleSheet.create ({
         marginBottom: scale(14),
         marginTop: scale(14)
     },
+    mainTextA: {
+        fontFamily: 'Poppins-Bold',
+        color: colors.mainColor,
+        fontSize: scale(15),
+        fontWeight: '500',
+        marginTop: scale(15),
+    },
     
 })
